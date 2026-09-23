@@ -1,5 +1,7 @@
 from ingestion.pdf_loader import PDFLoader
 from ingestion.chunker import Chunker
+from ingestion.ocr_processor import TesseractOCRProcessor
+from ingestion.image_extractor import PDFImageExtractor
 
 from embeddings.ollama_embedder import OllamaEmbedder
 from vectorstore.faiss_store import FAISSStore
@@ -11,10 +13,24 @@ from pipeline.rag_pipeline import RAGPipeline
 def create_rag():
 
     # -----------------------------
-    # 1. Load PDF
+    # 1. Create OCR components
     # -----------------------------
 
-    loader = PDFLoader()
+    ocr_processor = TesseractOCRProcessor()
+
+    image_extractor = PDFImageExtractor(
+        dpi=200
+    )
+
+
+    # -----------------------------
+    # 2. Load PDF
+    # -----------------------------
+
+    loader = PDFLoader(
+        ocr_processor=ocr_processor,
+        image_extractor=image_extractor
+    )
 
     documents = loader.load(
         "data/machine learning.pdf"
@@ -24,7 +40,7 @@ def create_rag():
 
 
     # -----------------------------
-    # 2. Create chunks
+    # 3. Create chunks
     # -----------------------------
 
     chunker = Chunker(
@@ -38,7 +54,7 @@ def create_rag():
 
 
     # -----------------------------
-    # 3. Check RAG definition
+    # 4. Check RAG definition
     # -----------------------------
 
     print("\n===================================")
@@ -60,6 +76,7 @@ def create_rag():
 
             print("\nRAG definition found!")
             print(f"Chunk ID: {i}")
+
             print(
                 f"Page: {chunk.metadata.get('page')}"
             )
@@ -69,13 +86,14 @@ def create_rag():
             print(chunk.content)
             print("-----------------------------")
 
+
     if not definition_found:
 
         print("\nRAG definition was NOT found in chunks.")
 
 
     # -----------------------------
-    # 4. Create embeddings
+    # 5. Create embeddings
     # -----------------------------
 
     embedder = OllamaEmbedder(
@@ -91,7 +109,7 @@ def create_rag():
 
 
     # -----------------------------
-    # 5. Create FAISS vector store
+    # 6. Create FAISS vector store
     # -----------------------------
 
     vector_store = FAISSStore(
@@ -107,7 +125,7 @@ def create_rag():
 
 
     # -----------------------------
-    # 6. Create retriever
+    # 7. Create retriever
     # -----------------------------
 
     retriever = SimilarityRetriever(
@@ -117,7 +135,7 @@ def create_rag():
 
 
     # -----------------------------
-    # 7. Create LLM
+    # 8. Create LLM
     # -----------------------------
 
     llm = OllamaLLM(
@@ -126,7 +144,7 @@ def create_rag():
 
 
     # -----------------------------
-    # 8. Create RAG pipeline
+    # 9. Create RAG pipeline
     # -----------------------------
 
     rag = RAGPipeline(
@@ -167,7 +185,7 @@ if __name__ == "__main__":
 
         result = rag.ask(
             question,
-            k=10
+            k=4
         )
 
         print("\nBot:")
@@ -184,3 +202,4 @@ if __name__ == "__main__":
             print(document.content)
 
         print()
+
