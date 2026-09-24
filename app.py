@@ -185,7 +185,7 @@ if __name__ == "__main__":
 
         result = rag.ask(
             question,
-            k=4
+            k=10
         )
 
         print("\nBot:")
