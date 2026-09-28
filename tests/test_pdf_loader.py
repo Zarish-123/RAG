@@ -1,13 +1,13 @@
-from ingestion.pdf_loader import PDFLoader
+import pytesseract
+from PIL import Image
 
-
-loader = PDFLoader()
-
-docs = loader.load(
-    "data/document.pdf"
+pytesseract.pytesseract.tesseract_cmd = (
+    r"C:\Program Files\Tesseract-OCR\tesseract.exe"
 )
 
+image = Image.open("data/images.jpg")
 
-for doc in docs: python --version python --version
-    print(doc.content[:200])
-    print("----------------")
+text = pytesseract.image_to_string(image)
+
+print("Extracted Text:")
+print(text)
