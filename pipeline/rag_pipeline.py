@@ -243,4 +243,3 @@ Answer:
             "answer": answer,
             "documents": documents
         }
-

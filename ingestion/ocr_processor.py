@@ -265,4 +265,3 @@ class TesseractOCRProcessor(
                 best_result = result
 
         return best_result
-
