@@ -3,7 +3,7 @@ import io
 import pymupdf
 from PIL import Image
 
-from core.interfaces.image_extractor import ImageExtractor
+from core.interfaces.test_image_extractor import ImageExtractor
 
 
 class PDFImageExtractor(ImageExtractor):
@@ -16,7 +16,12 @@ class PDFImageExtractor(ImageExtractor):
 
         for page in pdf:
 
-            pixmap = page.get_pixmap()
+            matrix = pymupdf.Matrix(2, 2)
+
+            pixmap = page.get_pixmap(
+                matrix=matrix,
+                alpha=False
+            )
 
             image_bytes = pixmap.tobytes("png")
 
