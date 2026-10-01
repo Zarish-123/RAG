@@ -7,6 +7,7 @@ class OpenCVPreprocessor:
 
     def preprocess(self, image: Image.Image) -> Image.Image:
 
+        # PIL → NumPy
         image_array = np.array(image)
 
         # RGB → Grayscale
@@ -15,14 +16,14 @@ class OpenCVPreprocessor:
             cv2.COLOR_RGB2GRAY
         )
 
-        # Noise reduction
+        # Light noise removal
         blur = cv2.GaussianBlur(
             gray,
-            (5, 5),
+            (3, 3),
             0
         )
 
-        # Thresholding
+        # Otsu thresholding
         threshold = cv2.threshold(
             blur,
             0,
@@ -30,4 +31,9 @@ class OpenCVPreprocessor:
             cv2.THRESH_BINARY + cv2.THRESH_OTSU
         )[1]
 
-        return Image.fromarray(threshold)
+        # NumPy → PIL
+        processed_image = Image.fromarray(
+            threshold
+        )
+
+        return processed_image
