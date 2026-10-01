@@ -4,7 +4,7 @@ image = cv2.imread("data/images.jpg")
 
 cv2.circle(
     image,
-    (200, 150),   # center (x, y)
+    (300, 150),   # center (x, y)
     50,           # radius
     (255, 0, 0),  # color: Blue
     0            # thickness
