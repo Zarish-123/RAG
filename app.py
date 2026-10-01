@@ -33,7 +33,7 @@ def create_rag():
     )
 
     documents = loader.load(
-        "data/machine learning.pdf"
+        "data/document.pdf"
     )
 
     print(f"Loaded {len(documents)} pages")
