@@ -14,9 +14,15 @@ class TesseractOCRProcessor(OCRProcessor):
             r"C:\Program Files\Tesseract-OCR\tesseract.exe"
         )
 
-    def extract_text(self, image: Image.Image) -> str:
+    def extract_text(
+        self,
+        image: Image.Image
+    ) -> str:
 
-        return pytesseract.image_to_string(
+        text = pytesseract.image_to_string(
             image,
-            lang=self.language
+            lang=self.language,
+            config="--oem 3 --psm 3"
         )
+
+        return text
