@@ -3,26 +3,71 @@ from ingestion.test_opencv_preprocessor import OpenCVPreprocessor
 from ingestion.test_ocr_processor import TesseractOCRProcessor
 
 
+# --------------------------------
+# PDF path
+# --------------------------------
+
 pdf_path = "data/document.pdf"
 
 
+# --------------------------------
+# Create objects
+# --------------------------------
+
 extractor = PDFImageExtractor()
+
 preprocessor = OpenCVPreprocessor()
+
 ocr = TesseractOCRProcessor()
 
 
-images = extractor.extract(pdf_path)
+# --------------------------------
+# PDF → Images
+# --------------------------------
 
-print("Total pages:", len(images))
+images = extractor.extract(
+    pdf_path
+)
+
+print(
+    "Total pages:",
+    len(images)
+)
 
 
-for page_number, image in enumerate(images, start=1):
+# --------------------------------
+# Process every page
+# --------------------------------
 
-    print(f"\nProcessing page {page_number}...")
+for page_number, image in enumerate(
+    images,
+    start=1
+):
 
-    processed_image = preprocessor.preprocess(image)
+    print(
+        f"\nProcessing page {page_number}..."
+    )
 
-    text = ocr.extract_text(processed_image)
 
-    print("Extracted Text:")
+    # --------------------------------
+    # OpenCV preprocessing
+    # --------------------------------
+
+    processed_image = preprocessor.preprocess(
+        image
+    )
+
+
+    # --------------------------------
+    # OCR
+    # --------------------------------
+
+    text = ocr.extract_text(
+        processed_image
+    )
+
+
+    print("\nExtracted Text:")
+    print("-" * 60)
     print(text)
+    print("-" * 60)
